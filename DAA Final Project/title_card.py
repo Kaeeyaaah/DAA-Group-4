@@ -30,14 +30,14 @@ class TitleCard:
         
         # title
         title_label = ctk.CTkLabel(main_frame, text="Pondong Planado", 
-                                   font=('Roboto', 28, 'bold'),  # Use Florisha if installed
-                                   fg_color="transparent", text_color='white')
+                                   font=('Roboto', 28, 'bold'), 
+                                   fg_color="transparent", text_color='black')
         title_label.pack(pady=(40, 10))
         
         # subtitle
         subtitle_label = ctk.CTkLabel(main_frame, text="A Smart Budgeting System for Barangay Projects", 
                                       font=('Roboto', 16, 'italic'), 
-                                      fg_color="transparent", text_color='white')
+                                      fg_color="transparent", text_color='black')
         subtitle_label.pack(pady=(0, 40))
         
         # button frame
@@ -75,7 +75,7 @@ class TitleCard:
         # footer
         footer_label = ctk.CTkLabel(main_frame, text="Final Requirement for Design and Analysis of Algorithms", 
                                     font=('Arial', 12), 
-                                    fg_color="transparent", text_color='white')
+                                    fg_color="transparent", text_color='black')
         footer_label.pack(side="bottom", pady=(40, 20))
         
         # closing the application
