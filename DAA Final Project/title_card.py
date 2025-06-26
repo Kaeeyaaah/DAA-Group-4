@@ -18,7 +18,7 @@ class TitleCard:
         self.root.resizable(False, False)
         
         # gradient background
-        self.root.configure(bg='#4682B4')
+        self.root.configure(fg_color='#4682B4')
         
         # center window where the title and button will be displayed
         self.root.geometry("+%d+%d" % ((self.root.winfo_screenwidth() / 2) - 250, 

@@ -1,8 +1,9 @@
 # this file will handle the gui of the application
 
 # import the necessary libraries
-import tkinter as tk
+import customtkinter as ctk
 from tkinter import ttk, messagebox
+import tkinter as tk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.patches as patches
@@ -12,6 +13,10 @@ import numpy as np
 # import the classes from other files (the files should be in the same directory)
 from project import Project
 from branch_and_bound import BranchAndBound
+
+# Set the appearance mode and color theme
+ctk.set_appearance_mode("light")
+ctk.set_default_color_theme("blue")
 
 # gui class of the application
 class BudgetAllocationGUI:
@@ -28,30 +33,30 @@ class BudgetAllocationGUI:
 
     # setup the gui 
     def setup_gui(self):
-        """Initialize the GUI components"""
         self.root.title("Group 4 Final Project - Pondong Planado")
         self.root.geometry("1400x900")
-        self.root.configure(bg='#4682B4')
+        self.root.configure(fg_color='#4682B4')
         
         # create the main frame
-        main_frame = tk.Frame(self.root, bg='#87CEEB')
-        main_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+        main_frame = ctk.CTkFrame(self.root, fg_color='#9DCCDE', corner_radius=15)
+        main_frame.pack(fill="both", expand=True, padx=10, pady=10)
         
         # title label
-        title_label = tk.Label(main_frame, text="Pondong Planado", 
-                              font=('Arial', 24, 'bold'), 
-                              bg='#87CEEB', fg='white')
+        title_label = ctk.CTkLabel(main_frame, text="Pondong Planado", 
+                              font=('Roboto', 24, 'bold'), 
+                              fg_color="transparent", text_color='black')
         title_label.pack(pady=10)
         
         # subtitle label
-        subtitle_label = tk.Label(main_frame, text="A Smart Budgeting System for Barangay Projects", 
-                                 font=('Arial', 14, 'italic'), 
-                                 bg='#87CEEB', fg='white')
+        subtitle_label = ctk.CTkLabel(main_frame, text="A Smart Budgeting System for Barangay Projects", 
+                                 font=('Roboto', 14, 'italic'), 
+                                 fg_color="transparent", text_color='black')
         subtitle_label.pack(pady=(0, 20))
+
+        self.root.update_idletasks()
         
-        # create a tkinter notebook for tabs
         self.notebook = ttk.Notebook(main_frame)
-        self.notebook.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+        self.notebook.pack(fill="both", expand=True, padx=10, pady=10)
         
         # create tabs
         self.create_main_tab() # main tab where you define a project and allocate the budget
@@ -59,63 +64,79 @@ class BudgetAllocationGUI:
 
     # main tab  
     def create_main_tab(self):
-        main_tab = ttk.Frame(self.notebook)
+        main_tab = ctk.CTkFrame(self.notebook, fg_color='#E6F3FF', corner_radius=10)
         self.notebook.add(main_tab, text="Budget Allocation")
         
         # top frame
-        top_frame = tk.LabelFrame(main_tab, text="Budget Configuration & Emergency Mode", 
-                                 font=('Arial', 12, 'bold'), bg='#E6F3FF')
-        top_frame.pack(fill=tk.X, padx=10, pady=5)
+        top_frame = ctk.CTkFrame(main_tab, fg_color='#D1E7F0', corner_radius=10)
+        top_frame.pack(fill="x", padx=10, pady=5)
+        
+        # title for top frame
+        top_title = ctk.CTkLabel(top_frame, text="Budget Configuration", 
+                                font=('Arial', 12, 'bold'), text_color='black')
+        top_title.pack(pady=(10, 5))
         
         # budget frame 
-        budget_frame = tk.Frame(top_frame, bg='#E6F3FF')
-        budget_frame.pack(side=tk.LEFT, padx=10, pady=5)
+        budget_frame = ctk.CTkFrame(top_frame, fg_color="transparent")
+        budget_frame.pack(side="left", padx=10, pady=5)
         
-        tk.Label(budget_frame, text="Total Budget (₱):", bg='#E6F3FF').pack(side=tk.LEFT)
-        self.budget_entry = tk.Entry(budget_frame, width=15)
-        self.budget_entry.pack(side=tk.LEFT, padx=5)
+        ctk.CTkLabel(budget_frame, text="Total Budget (₱):", text_color='black').pack(side="left")
+        self.budget_entry = ctk.CTkEntry(budget_frame, width=150, corner_radius=8)
+        self.budget_entry.pack(side="left", padx=5)
         
         # emergency mode frame
-        emergency_frame = tk.Frame(top_frame, bg='#E6F3FF')
-        emergency_frame.pack(side=tk.LEFT, padx=20, pady=5)
+        emergency_frame = ctk.CTkFrame(top_frame, fg_color="transparent")
+        emergency_frame.pack(side="left", padx=20, pady=5)
         
         # check button
-        emergency_check = tk.Checkbutton(emergency_frame, text="Emergency Mode", 
+        emergency_check = ctk.CTkCheckBox(emergency_frame, text="Emergency Mode", 
                                        variable=self.emergency_mode,
                                        command=self.toggle_emergency_mode,
-                                       bg='#E6F3FF', font=('Arial', 10, 'bold'))
-        emergency_check.pack(side=tk.LEFT)
+                                       font=('Arial', 10, 'bold'),
+                                       text_color='black')
+        emergency_check.pack(side="left")
         
-        # combo box that contains the emergency types
+        # combo box that contains the emergency types (keeping ttk since CTk combobox is different)
         self.emergency_combo = ttk.Combobox(emergency_frame, textvariable=self.emergency_type,
                                           values=["Typhoon", "Earthquake", "Flood", "Fire", "Health Crisis"],
                                           state="disabled", width=12)
-        self.emergency_combo.pack(side=tk.LEFT, padx=5)
+        self.emergency_combo.pack(side="left", padx=5)
         
         # button frame
-        button_frame = tk.Frame(top_frame, bg='#E6F3FF')
-        button_frame.pack(side=tk.RIGHT, padx=10, pady=5)
+        button_frame = ctk.CTkFrame(top_frame, fg_color="transparent")
+        button_frame.pack(side="right", padx=10, pady=5)
         
-        tk.Button(button_frame, text="Optimize Allocation", command=self.optimize_budget,
-                 bg='#32CD32', fg='white', font=('Arial', 10, 'bold')).pack(side=tk.LEFT, padx=2)
-        tk.Button(button_frame, text="Add Project", command=self.show_add_project_dialog,
-                 bg='#4169E1', fg='white').pack(side=tk.LEFT, padx=2)
-        tk.Button(button_frame, text="Remove Selected", command=self.remove_selected_project,
-                 bg='#DC143C', fg='white').pack(side=tk.LEFT, padx=2)
-        tk.Button(button_frame, text="Clear All", command=self.clear_all_projects,
-                 bg='#FF6347', fg='white').pack(side=tk.LEFT, padx=2)
+        ctk.CTkButton(button_frame, text="Optimize Allocation", command=self.optimize_budget,
+                     fg_color='#2C4E2C', text_color='white', font=('Arial', 10, 'bold'),
+                     hover_color='#3e6b3e', corner_radius=8, width=140).pack(side="left", padx=2)
+        ctk.CTkButton(button_frame, text="Add Project", command=self.show_add_project_dialog,
+                     fg_color='#4169E1', text_color='white', hover_color='#5a7ce6',
+                     corner_radius=8, width=100).pack(side="left", padx=2)
+        ctk.CTkButton(button_frame, text="Remove Selected", command=self.remove_selected_project,
+                     fg_color='#DC143C', text_color='white', hover_color='#e6455a',
+                     corner_radius=8, width=120).pack(side="left", padx=2)
+        ctk.CTkButton(button_frame, text="Clear All", command=self.clear_all_projects,
+                     fg_color='#FF6347', text_color='white', hover_color='#ff7a5c',
+                     corner_radius=8, width=80).pack(side="left", padx=2)
         
         # middle frame
-        middle_frame = tk.Frame(main_tab)
-        middle_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)
+        middle_frame = ctk.CTkFrame(main_tab, fg_color="transparent")
+        middle_frame.pack(fill="both", expand=True, padx=10, pady=5)
         
         # projects table
-        projects_frame = tk.LabelFrame(middle_frame, text="Available Projects", 
-                                     font=('Arial', 12, 'bold'))
-        projects_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=(0, 5))
+        projects_frame = ctk.CTkFrame(middle_frame, fg_color='#D1E7F0', corner_radius=10)
+        projects_frame.pack(side="left", fill="both", expand=True, padx=(0, 5))
         
-        # projects tree view
-        self.projects_tree = ttk.Treeview(projects_frame, 
+        # projects frame title
+        projects_title = ctk.CTkLabel(projects_frame, text="Available Projects", 
+                                     font=('Arial', 12, 'bold'), text_color='black')
+        projects_title.pack(pady=(10, 5))
+        
+        # projects tree view (keeping ttk since CTk doesn't have treeview)
+        tree_frame = ctk.CTkFrame(projects_frame, fg_color='white', corner_radius=8)
+        tree_frame.pack(fill="both", expand=True, padx=10, pady=(0, 10))
+        
+        self.projects_tree = ttk.Treeview(tree_frame, 
                                         columns=('Name', 'Cost', 'Benefit', 'Ratio', 'Category', 'Priority'),
                                         show='headings', height=10)
         
@@ -134,18 +155,26 @@ class BudgetAllocationGUI:
         self.projects_tree.column('Category', width=120, anchor='center')
         self.projects_tree.column('Priority', width=100, anchor='center')
     
-        projects_scrollbar = ttk.Scrollbar(projects_frame, orient=tk.VERTICAL, command=self.projects_tree.yview)
+        projects_scrollbar = ttk.Scrollbar(tree_frame, orient="vertical", command=self.projects_tree.yview)
         self.projects_tree.configure(yscrollcommand=projects_scrollbar.set)
         
-        self.projects_tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-        projects_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        self.projects_tree.pack(side="left", fill="both", expand=True)
+        projects_scrollbar.pack(side="right", fill="y")
         
         # solution table
-        solution_frame = tk.LabelFrame(middle_frame, text="Optimal Selection", 
-                                     font=('Arial', 12, 'bold'))
-        solution_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=(5, 0))
+        solution_frame = ctk.CTkFrame(middle_frame, fg_color='#D1E7F0', corner_radius=10)
+        solution_frame.pack(side="right", fill="both", expand=True, padx=(5, 0))
         
-        self.solution_tree = ttk.Treeview(solution_frame,
+        # solution frame title
+        solution_title = ctk.CTkLabel(solution_frame, text="Optimal Selection", 
+                                     font=('Arial', 12, 'bold'), text_color='black')
+        solution_title.pack(pady=(10, 5))
+        
+        # solution tree frame
+        solution_tree_frame = ctk.CTkFrame(solution_frame, fg_color='white', corner_radius=8)
+        solution_tree_frame.pack(fill="both", expand=True, padx=10, pady=(0, 10))
+        
+        self.solution_tree = ttk.Treeview(solution_tree_frame,
                                         columns=('Name', 'Cost', 'Benefit', 'Category', 'Priority'),
                                         show='headings', height=10)
         
@@ -161,32 +190,43 @@ class BudgetAllocationGUI:
         self.solution_tree.column('Category', width=120, anchor='center')
         self.solution_tree.column('Priority', width=100, anchor='center')
 
-        solution_scrollbar = ttk.Scrollbar(solution_frame, orient=tk.VERTICAL, command=self.solution_tree.yview)
+        solution_scrollbar = ttk.Scrollbar(solution_tree_frame, orient="vertical", command=self.solution_tree.yview)
         self.solution_tree.configure(yscrollcommand=solution_scrollbar.set)
         
-        self.solution_tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-        solution_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        self.solution_tree.pack(side="left", fill="both", expand=True)
+        solution_scrollbar.pack(side="right", fill="y")
         
-        # bottom frame (set the font and the spacing of the text widget)
-        bottom_frame = tk.LabelFrame(main_tab, text="Optimization Results", 
-                                   font=('Arial', 12, 'bold'))
-        bottom_frame.pack(fill=tk.BOTH, expand=True, padx=10, pady=5)
+        # bottom frame
+        bottom_frame = ctk.CTkFrame(main_tab, fg_color='#D1E7F0', corner_radius=10)
+        bottom_frame.pack(fill="both", expand=True, padx=10, pady=5)
         
-        self.result_text = tk.Text(bottom_frame, height=8, wrap=tk.WORD)
-        result_scrollbar = ttk.Scrollbar(bottom_frame, orient=tk.VERTICAL, command=self.result_text.yview)
+        # bottom frame title
+        bottom_title = ctk.CTkLabel(bottom_frame, text="Optimization Results", 
+                                   font=('Arial', 12, 'bold'), text_color='black')
+        bottom_title.pack(pady=(10, 5))
+        
+        # text frame
+        text_frame = ctk.CTkFrame(bottom_frame, fg_color='white', corner_radius=8)
+        text_frame.pack(fill="both", expand=True, padx=10, pady=(0, 10))
+        
+        self.result_text = tk.Text(text_frame, height=8, wrap="word", bg='white', fg='black')
+        result_scrollbar = ttk.Scrollbar(text_frame, orient="vertical", command=self.result_text.yview)
         self.result_text.configure(yscrollcommand=result_scrollbar.set)
         
-        self.result_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-        result_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        self.result_text.pack(side="left", fill="both", expand=True)
+        result_scrollbar.pack(side="right", fill="y")
         
         # status frame
-        self.status_label = tk.Label(main_tab, text="Ready to optimize budget allocation", 
-                                   relief=tk.SUNKEN, anchor=tk.W)
-        self.status_label.pack(fill=tk.X, side=tk.BOTTOM)
+        status_frame = ctk.CTkFrame(main_tab, fg_color='#B8D4E3', corner_radius=8)
+        status_frame.pack(fill="x", side="bottom", padx=10, pady=5)
+        
+        self.status_label = ctk.CTkLabel(status_frame, text="Ready to optimize budget allocation", 
+                                        anchor="w", text_color='black')
+        self.status_label.pack(fill="x", padx=10, pady=5)
         
     # create the chart tab
     def create_chart_tab(self):
-        chart_tab = ttk.Frame(self.notebook)
+        chart_tab = ctk.CTkFrame(self.notebook, fg_color='#E6F3FF', corner_radius=10)
         self.notebook.add(chart_tab, text="Allocation Charts")
         
         # create the charts
@@ -194,10 +234,13 @@ class BudgetAllocationGUI:
         self.fig.suptitle('Budget Allocation Analysis', fontsize=16, fontweight='bold')
         
         # create a canvas that displays the charts
-        self.canvas = FigureCanvasTkAgg(self.fig, chart_tab)
-        self.canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+        canvas_frame = ctk.CTkFrame(chart_tab, fg_color='white', corner_radius=10)
+        canvas_frame.pack(fill="both", expand=True, padx=10, pady=10)
         
-        # Initialize empty charts
+        self.canvas = FigureCanvasTkAgg(self.fig, canvas_frame)
+        self.canvas.get_tk_widget().pack(fill="both", expand=True)
+        
+        # initialize the empty charts
         self.update_charts()
         
     # emergency mode toggle function
@@ -213,60 +256,79 @@ class BudgetAllocationGUI:
         
         # emergency mode conditions
         if is_emergency:
-            self.status_label.config(text=" Emergency mode enabled - Priority given to critical sectors")
+            self.status_label.configure(text=" Emergency mode enabled - Priority given to critical sectors")
         else:
-            self.status_label.config(text="Normal mode - Standard optimization")
+            self.status_label.configure(text="Normal mode - Standard optimization")
     
     # add projects using dialog
     def show_add_project_dialog(self):
-        dialog = tk.Toplevel(self.root)
+        dialog = ctk.CTkToplevel(self.root)
         dialog.title("Add New Project")
-        dialog.geometry("400x300")
-        dialog.configure(bg='#F0F8FF')
+        dialog.geometry("450x450")
+        dialog.configure(fg_color='#9DCCDE')
         dialog.transient(self.root)
         dialog.grab_set()
         
         # center the dialog on the screen
         dialog.geometry("+%d+%d" % (self.root.winfo_rootx() + 50, self.root.winfo_rooty() + 50))
         
+        # main dialog frame
+        main_dialog_frame = ctk.CTkFrame(dialog, fg_color='#D1E7F0', corner_radius=15)
+        main_dialog_frame.pack(fill="both", expand=True, padx=20, pady=20)
+        
+        # dialog title
+        dialog_title = ctk.CTkLabel(main_dialog_frame, text="Add New Project", 
+                                   font=('Arial', 16, 'bold'), text_color='black')
+        dialog_title.pack(pady=(20, 10))
+        
         # create fields that can be filled in
         fields = {}
         
         # name field
-        tk.Label(dialog, text="Project Name:", bg='#F0F8FF').grid(row=0, column=0, sticky='w', padx=10, pady=5)
-        fields['name'] = tk.Entry(dialog, width=30)
-        fields['name'].grid(row=0, column=1, padx=10, pady=5)
+        name_frame = ctk.CTkFrame(main_dialog_frame, fg_color="transparent")
+        name_frame.pack(fill="x", padx=20, pady=5)
+        ctk.CTkLabel(name_frame, text="Project Name:", text_color='black', width=120, anchor="w").pack(side="left")
+        fields['name'] = ctk.CTkEntry(name_frame, width=250, corner_radius=8)
+        fields['name'].pack(side="right")
         
         # cost field
-        tk.Label(dialog, text="Cost (₱):", bg='#F0F8FF').grid(row=1, column=0, sticky='w', padx=10, pady=5)
-        fields['cost'] = tk.Entry(dialog, width=30)
-        fields['cost'].grid(row=1, column=1, padx=10, pady=5)
+        cost_frame = ctk.CTkFrame(main_dialog_frame, fg_color="transparent")
+        cost_frame.pack(fill="x", padx=20, pady=5)
+        ctk.CTkLabel(cost_frame, text="Cost (₱):", text_color='black', width=120, anchor="w").pack(side="left")
+        fields['cost'] = ctk.CTkEntry(cost_frame, width=250, corner_radius=8)
+        fields['cost'].pack(side="right")
         
         # benefit score field
-        tk.Label(dialog, text="Benefit Score (0-10):", bg='#F0F8FF').grid(row=2, column=0, sticky='w', padx=10, pady=5)
-        fields['benefit'] = tk.Entry(dialog, width=30)
-        fields['benefit'].grid(row=2, column=1, padx=10, pady=5)
+        benefit_frame = ctk.CTkFrame(main_dialog_frame, fg_color="transparent")
+        benefit_frame.pack(fill="x", padx=20, pady=5)
+        ctk.CTkLabel(benefit_frame, text="Benefit Score (0-10):", text_color='black', width=120, anchor="w").pack(side="left")
+        fields['benefit'] = ctk.CTkEntry(benefit_frame, width=250, corner_radius=8)
+        fields['benefit'].pack(side="right")
         
         # benefit score conditions
-        warning_label = tk.Label(dialog, text="Benefit score must be between 0 and 10", 
-                               fg='red', bg='#F0F8FF', font=('Arial', 9, 'italic', 'bold'))
-        warning_label.grid(row=3, column=1, padx=10, pady=2)
+        warning_label = ctk.CTkLabel(main_dialog_frame, text="Benefit score must be between 0 and 10", 
+                               text_color='red', font=('Arial', 9, 'italic'))
+        warning_label.pack(pady=2)
         
         # category selection
-        tk.Label(dialog, text="Category:", bg='#F0F8FF').grid(row=4, column=0, sticky='w', padx=10, pady=5)
-        fields['category'] = ttk.Combobox(dialog, width=27,
+        category_frame = ctk.CTkFrame(main_dialog_frame, fg_color="transparent")
+        category_frame.pack(fill="x", padx=20, pady=5)
+        ctk.CTkLabel(category_frame, text="Category:", text_color='black', width=120, anchor="w").pack(side="left")
+        fields['category'] = ttk.Combobox(category_frame, width=35,
                                         values=["Infrastructure", "Health", "Education", 
                                                "Environment", "Social Services", "Economic Development"])
-        fields['category'].grid(row=4, column=1, padx=10, pady=5)
+        fields['category'].pack(side="right")
         
         # description field
-        tk.Label(dialog, text="Description:", bg='#F0F8FF').grid(row=5, column=0, sticky='nw', padx=10, pady=5)
-        fields['description'] = tk.Text(dialog, width=30, height=5)
-        fields['description'].grid(row=5, column=1, padx=10, pady=5)
+        desc_frame = ctk.CTkFrame(main_dialog_frame, fg_color="transparent")
+        desc_frame.pack(fill="x", padx=20, pady=5)
+        ctk.CTkLabel(desc_frame, text="Description:", text_color='black', width=120, anchor="nw").pack(side="left", anchor="n")
+        fields['description'] = tk.Text(desc_frame, width=35, height=5, bg='white', fg='black')
+        fields['description'].pack(side="right")
         
         # buttons
-        button_frame = tk.Frame(dialog, bg='#F0F8FF')
-        button_frame.grid(row=6, column=0, columnspan=2, pady=20)
+        button_frame = ctk.CTkFrame(main_dialog_frame, fg_color="transparent")
+        button_frame.pack(pady=20)
         
         # add the project 
         def add_project():
@@ -275,7 +337,7 @@ class BudgetAllocationGUI:
                 cost = float(fields['cost'].get())
                 benefit = float(fields['benefit'].get())
                 category = fields['category'].get()
-                description = fields['description'].get(1.0, tk.END).strip()
+                description = fields['description'].get(1.0, "end").strip()
                 
                 # checks the conditions and also the required fields
                 if not name:
@@ -301,7 +363,7 @@ class BudgetAllocationGUI:
                 self.projects.append(project)
                 self.update_projects_table()
                 dialog.destroy() # close the dialog
-                self.status_label.config(text=f"Project added successfully. Total projects: {len(self.projects)}")
+                self.status_label.configure(text=f"Project added successfully. Total projects: {len(self.projects)}")
 
             # shows the errors   
             except ValueError as e:
@@ -310,11 +372,13 @@ class BudgetAllocationGUI:
                 messagebox.showerror("Error", f"Please enter valid numbers for cost and benefit.\n{str(e)}")
         
         # setting up the add project button
-        tk.Button(button_frame, text="Add Project", command=add_project,
-                 bg='#4169E1', fg='white', font=('Arial', 10, 'bold')).pack(side=tk.LEFT, padx=5)
+        ctk.CTkButton(button_frame, text="Add Project", command=add_project,
+                     fg_color='#2C4E2C', text_color='white', font=('Arial', 10, 'bold'),
+                     hover_color='#3e6b3e', corner_radius=8, width=120).pack(side="left", padx=5)
         # setting up the cancel button
-        tk.Button(button_frame, text="Cancel", command=dialog.destroy,
-                 bg='#DC143C', fg='white').pack(side=tk.LEFT, padx=5)
+        ctk.CTkButton(button_frame, text="Cancel", command=dialog.destroy,
+                     fg_color='#DC143C', text_color='white', hover_color='#e6455a',
+                     corner_radius=8, width=80).pack(side="left", padx=5)
     
     # optimize the budget allocation
     def optimize_budget(self):
@@ -330,21 +394,21 @@ class BudgetAllocationGUI:
                 messagebox.showerror("Error", "Please enter a valid positive budget amount.")
                 return
             
-            self.status_label.config(text="Optimizing budget allocation...")
+            self.status_label.configure(text="Optimizing budget allocation...")
             self.root.update()
             
             # optimization with emergency situation consideration
             self.solution = BranchAndBound.solve_knapsack(self.projects, budget, self.emergency_mode.get())
             self.display_solution(budget)
             self.update_charts()
-            self.status_label.config(text="Optimization completed successfully.")
+            self.status_label.configure(text="Optimization completed successfully.")
 
         # handle the errors  
         except ValueError:
             messagebox.showerror("Error", "Please enter a valid budget amount.")
         except Exception as e:
             messagebox.showerror("Error", f"Error during optimization: {str(e)}")
-            self.status_label.config(text="Optimization failed.")
+            self.status_label.configure(text="Optimization failed.")
     
     # display the solutions
     def display_solution(self, budget):
@@ -366,7 +430,7 @@ class BudgetAllocationGUI:
                 priority_text
             ))
         
-        # Update the bottom text area
+        # update the bottom text area
         result_text = "=== BUDGET ALLOCATION OPTIMIZATION RESULTS ===\n\n"
         
         if self.emergency_mode.get():
@@ -397,7 +461,7 @@ class BudgetAllocationGUI:
         for category, data in category_totals.items():
             result_text += f"• {category}: {data['count']} projects, ₱{data['cost']:,.2f}\n"
         
-        self.result_text.delete(1.0, tk.END)
+        self.result_text.delete(1.0, "end")
         self.result_text.insert(1.0, result_text)
     
     # update the charts
@@ -561,11 +625,11 @@ class BudgetAllocationGUI:
             # clear the solution if the removed project was part of it
             for item in self.solution_tree.get_children():
                 self.solution_tree.delete(item)
-            self.result_text.delete(1.0, tk.END)
+            self.result_text.delete(1.0, "end")
             self.solution = None
             self.update_charts()
             
-            self.status_label.config(text=f"Project removed. Total projects: {len(self.projects)}")
+            self.status_label.configure(text=f"Project removed. Total projects: {len(self.projects)}")
     
     # clear all projects from the projects table
     def clear_all_projects(self):
@@ -585,15 +649,15 @@ class BudgetAllocationGUI:
             # clear the solution and result text
             for item in self.solution_tree.get_children():
                 self.solution_tree.delete(item)
-            self.result_text.delete(1.0, tk.END)
+            self.result_text.delete(1.0, "end")
             self.solution = None
             self.update_charts()
             
-            self.status_label.config(text="All projects cleared.")
+            self.status_label.configure(text="All projects cleared.")
 
 # main function
 def main():
-    root = tk.Tk()
+    root = ctk.CTk()
     app = BudgetAllocationGUI(root)
     root.mainloop()
 
