@@ -221,7 +221,7 @@ class BudgetAllocationGUI:
     def show_add_project_dialog(self):
         dialog = tk.Toplevel(self.root)
         dialog.title("Add New Project")
-        dialog.geometry("400x500")
+        dialog.geometry("400x300")
         dialog.configure(bg='#F0F8FF')
         dialog.transient(self.root)
         dialog.grab_set()
