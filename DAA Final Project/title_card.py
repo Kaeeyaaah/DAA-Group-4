@@ -1,14 +1,14 @@
 # this file will handle the title card of the application
 
 # import the necessary libraries
-import tkinter as tk
+import customtkinter as ctk
 from tkinter import messagebox
 
 # title card class
 class TitleCard:
     # initialize the gui
     def __init__(self):
-        self.root = tk.Tk()
+        self.root = ctk.CTk()
         self.setup_gui()
     
     # setup the gui
@@ -25,71 +25,58 @@ class TitleCard:
                                       (self.root.winfo_screenheight() / 2) - 200))
         
         # main frame
-        main_frame = tk.Frame(self.root, bg='#87CEEB', relief=tk.RAISED, bd=2)
-        main_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=20)
+        main_frame = ctk.CTkFrame(self.root, fg_color="#9DCCDE", corner_radius=10)
+        main_frame.pack(fill="both", expand=True, padx=20, pady=20)
         
         # title
-        title_label = tk.Label(main_frame, text="Pondong Planado", 
-                              font=('Roboto', 28, 'bold'), 
-                              bg='#87CEEB', fg='white',
-                              relief=tk.FLAT)
+        title_label = ctk.CTkLabel(main_frame, text="Pondong Planado", 
+                                   font=('Roboto', 28, 'bold'),  # Use Florisha if installed
+                                   fg_color="transparent", text_color='white')
         title_label.pack(pady=(40, 10))
         
         # subtitle
-        subtitle_label = tk.Label(main_frame, text="A Smart Budgeting System for Barangay Projects", 
-                                 font=('Roboto', 16, 'italic'), 
-                                 bg='#87CEEB', fg='white')
+        subtitle_label = ctk.CTkLabel(main_frame, text="A Smart Budgeting System for Barangay Projects", 
+                                      font=('Roboto', 16, 'italic'), 
+                                      fg_color="transparent", text_color='white')
         subtitle_label.pack(pady=(0, 40))
         
         # button frame
-        button_frame = tk.Frame(main_frame, bg='#87CEEB')
+        button_frame = ctk.CTkFrame(main_frame, fg_color="transparent")
         button_frame.pack(pady=20)
         
         # start button
-        start_button = tk.Button(button_frame, text="START", 
-                               font=('Arial', 16, 'bold'),
-                               width=12, height=3,
-                               bg='#228B22', fg='white',
-                               relief=tk.RAISED, bd=3,
-                               cursor='hand2',
-                               command=self.start_application)
-        start_button.pack(side=tk.LEFT, padx=10)
-        
-        # start button hover effects
-        def on_start_enter(e):
-            start_button.config(bg='#008000')
-        
-        def on_start_leave(e):
-            start_button.config(bg='#228B22')
-        
-        start_button.bind("<Enter>", on_start_enter)
-        start_button.bind("<Leave>", on_start_leave)
+        start_button = ctk.CTkButton(
+            button_frame, text="START", 
+            font=('Arial', 16, 'bold'),
+            width=120, height=40,
+            fg_color="#2C4E2C", text_color='white',
+            hover_color="#3e6b3e",
+            corner_radius=20,
+            border_width=3,
+            border_color="#1e3320",
+            command=self.start_application
+        )
+        start_button.pack(side="left", padx=10)
         
         # exit button
-        exit_button = tk.Button(button_frame, text="EXIT", 
-                              font=('Arial', 16, 'bold'),
-                              width=12, height=3,
-                              bg='#DC143C', fg='white',
-                              relief=tk.RAISED, bd=3,
-                              cursor='hand2',
-                              command=self.exit_application)
-        exit_button.pack(side=tk.LEFT, padx=10)
-        
-        # exit button hover effects
-        def on_exit_enter(e):
-            exit_button.config(bg='#B22222')
-        
-        def on_exit_leave(e):
-            exit_button.config(bg='#DC143C')
-        
-        exit_button.bind("<Enter>", on_exit_enter)
-        exit_button.bind("<Leave>", on_exit_leave)
+        exit_button = ctk.CTkButton(
+            button_frame, text="EXIT", 
+            font=('Arial', 16, 'bold'),
+            width=120, height=40,
+            fg_color="#2C4E2C", text_color='white',
+            hover_color="#6b2e2e",
+            corner_radius=20,
+            border_width=3,
+            border_color="#33201e",
+            command=self.exit_application
+        )
+        exit_button.pack(side="left", padx=10)
         
         # footer
-        footer_label = tk.Label(main_frame, text="Final Requirement for Design and Analysis of Algorithms", 
-                               font=('Arial', 12), 
-                               bg='#87CEEB', fg='white')
-        footer_label.pack(side=tk.BOTTOM, pady=(40, 20))
+        footer_label = ctk.CTkLabel(main_frame, text="Final Requirement for Design and Analysis of Algorithms", 
+                                    font=('Arial', 12), 
+                                    fg_color="transparent", text_color='white')
+        footer_label.pack(side="bottom", pady=(40, 20))
         
         # closing the application
         self.root.protocol("WM_DELETE_WINDOW", self.exit_application)
@@ -103,7 +90,7 @@ class TitleCard:
             from budget_allocation_gui import BudgetAllocationGUI
             
             # create the root window
-            main_root = tk.Tk()
+            main_root = ctk.CTk()
             app = BudgetAllocationGUI(main_root)
             
             # show title card again when the main window is closed
@@ -138,7 +125,6 @@ class TitleCard:
 
 # main function
 def main():
-
     # create the title card and run it
     title_card = TitleCard()
     title_card.run()
