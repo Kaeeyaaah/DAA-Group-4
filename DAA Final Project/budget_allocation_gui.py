@@ -248,9 +248,11 @@ class BudgetAllocationGUI:
         is_emergency = self.emergency_mode.get()
         self.emergency_combo.config(state="readonly" if is_emergency else "disabled")
         
+        current_emergency_type = self.emergency_type.get()
+
         # update all projects once the emergency mode is enabled
         for project in self.projects:
-            project.set_emergency_priority(is_emergency)
+            project.set_emergency_priority(is_emergency, current_emergency_type)
         
         self.update_projects_table()
         
@@ -505,8 +507,10 @@ class BudgetAllocationGUI:
         colors = ['#32CD32', '#FF6347']
         
         # plot the pie chart
-        self.ax1.pie(sizes, labels=labels, colors=colors, autopct='%1.1f%%', startangle=90)
+        wedges, texts, autotexts = self.ax1.pie(sizes, labels=None, colors=colors, autopct='%1.1f%%', startangle=90, pctdistance=0.85)
         self.ax1.set_title('Budget Utilization')
+        self.ax1.legend(wedges, labels, title="Status", loc="center left", bbox_to_anchor=(1,0,0.5,1))
+        self.ax1.axis('equal')
     
     # create the category breakdown pie chart
     def _create_category_breakdown_chart(self):
@@ -520,9 +524,11 @@ class BudgetAllocationGUI:
             costs = list(category_totals.values())
             colors = plt.cm.Set3(np.linspace(0, 1, len(categories)))
             # plot the pie chart
-            self.ax2.pie(costs, labels=categories, colors=colors, autopct='%1.1f%%', startangle=90)
+            wedges, texts, autotexts = self.ax2.pie(costs, labels=None, colors=colors, autopct='%1.1f%%', startangle=90, pctdistance=0.85)
             self.ax2.set_title('Allocation by Category')
-    
+            self.ax2.legend(wedges, categories, title="Categories", loc="center left", bbox_to_anchor=(1,0,0.5,1))
+            self.ax2.axis('equal')   
+
     # create the project comparison bar chart
     def _create_project_comparison_chart(self):
         # show top 10 projects by cost if there are more than 10 projects
