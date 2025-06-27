@@ -4,6 +4,6 @@ To run the code:
 1. Enter the directory  
 2. Click the title_card.py file
 3. Download the file
-4. Check the file at your local directory and open it
+4. Check the file at your local directory and open it using your preferred IDE (e.x. Visual Studio Code)  
 5. Run the code in your IDE
 5.1 If you want to run it from the cmd, enter the command "python title_card.py"  
